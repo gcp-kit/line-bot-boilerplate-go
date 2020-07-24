@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <title>{{ .Title }}</title>
+    </head>
+    <body>
+        <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+        <script type=text/javascript>
+            uri = "{{ .URL }}";
+            error = "{{ .Error }}";
+            if (error) {
+                alert(error);
+                window.onload = function () {
+                    liff.init(function () {
+                        liff.closeWindow();
+                    });
+                };
+            } else {
+                if (uri.startsWith("maps://")) {
+                    window.onload = function () {
+                        liff.init(function () {
+                            liff.openWindow({
+                                url: uri
+                            });
+                            liff.closeWindow();
+                        });
+                    };
+                } else {
+                    location.href = uri.replace("&amp;", "&", -1);
+                }
+            }
+        </script>
+    </body>
+</html>

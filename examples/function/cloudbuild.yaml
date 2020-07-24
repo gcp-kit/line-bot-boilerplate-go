@@ -1,0 +1,50 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'WebHook'
+      - '--entry-point=WebHook'
+      - '--region=asia-northeast1'
+      - '--runtime=go111'
+      - '--timeout=30'
+      - '--trigger-http'
+      - '--env-vars-file=.env.yaml'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'ParentFunctions'
+      - '--entry-point=Forking'
+      - '--region=asia-northeast1'
+      - '--runtime=go111'
+      - '--timeout=30'
+      - '--trigger-topic=parent'
+      - '--env-vars-file=.env.yaml'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'ChildFunctions'
+      - '--entry-point=Forking'
+      - '--region=asia-northeast1'
+      - '--retry'
+      - '--runtime=go111'
+      - '--timeout=30'
+      - '--trigger-topic=child'
+      - '--env-vars-file=.env.yaml'
+      - '--memory=512MB' # 処理によって可変
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'LiffCompact'
+      - '--entry-point=LiffCompact'
+      - '--region=asia-northeast1'
+      - '--runtime=go111'
+      - '--timeout=30'
+      - '--trigger-http'
+      - '--env-vars-file=.env.yaml'
