@@ -1,4 +1,4 @@
-package cmd
+package core
 
 import (
 	"github.com/line/line-bot-sdk-go/linebot"
