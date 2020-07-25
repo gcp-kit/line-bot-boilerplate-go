@@ -19,25 +19,7 @@ go get github.com/gcp-kit/line-bot-boilerplate-go
 ```
 
 ## Usage
-```shell script
-git clone https://github.com/gcp-kit/line-bot-boilerplate-go-example.git
-cd line-bot-boilerplate-go-example
-go get -u
-```
-
-`.env.yaml.tpl` を `.env.yaml` にしてyaml内の値を整える  
-
-### Local
-
-```shell script
-go run main.go
-```
-
-### GCP(Cloud Functions)
-```shell script
-cd functions
-gcloud builds submit --config=cloudbuild.yaml .
-```
+[gcp-kit/line-bot-boilerplate-go-example](https://github.com/gcp-kit/line-bot-boilerplate-go-example)
 
 # License
 [MIT license](https://en.wikipedia.org/wiki/MIT_License).
