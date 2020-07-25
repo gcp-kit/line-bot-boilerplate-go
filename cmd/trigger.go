@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -40,7 +41,7 @@ func WebHook(ctx *gin.Context, secret string, topic *pubsub.Topic) {
 }
 
 // ParentFunctions - CloudFunctions(Trigger: Pub/Sub)
-func ParentFunctions(message *pubsub.Message, tracer *Tracer, topic *pubsub.Topic) error {
+func ParentFunctions(ctx context.Context, message *pubsub.Message, tracer *Tracer, topic *pubsub.Topic) error {
 	var wg sync.WaitGroup
 	events := tracer.ParseEvents(message)
 	for _, event := range events {
@@ -53,7 +54,7 @@ func ParentFunctions(message *pubsub.Message, tracer *Tracer, topic *pubsub.Topi
 				return
 			}
 			msg := &pubsub.Message{Data: data}
-			if _, err := topic.Publish(tracer.Ctx, msg).Get(tracer.Ctx); err != nil {
+			if _, err := topic.Publish(ctx, msg).Get(ctx); err != nil {
 				return
 			}
 		}(event)
@@ -63,13 +64,13 @@ func ParentFunctions(message *pubsub.Message, tracer *Tracer, topic *pubsub.Topi
 }
 
 // ChildFunctions - CloudFunctions(Trigger: Pub/Sub)
-func ChildFunctions(message *pubsub.Message, op *Operation) error {
+func ChildFunctions(ctx context.Context, message *pubsub.Message, op *Operation) error {
 	event := new(linebot.Event)
 	if err := event.UnmarshalJSON(message.Data); err != nil {
 		return err
 	}
 
-	if err := op.Switcher(event); err != nil {
+	if err := op.Switcher(ctx, event); err != nil {
 		return err
 	}
 	return nil

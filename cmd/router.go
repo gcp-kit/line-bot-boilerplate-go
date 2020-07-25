@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"sync"
@@ -16,17 +17,17 @@ type Operation struct {
 }
 
 // NewRouter - Routing
-func (op *Operation) NewRouter(engine *gin.Engine) error {
+func (op *Operation) NewRouter(ctx context.Context, engine *gin.Engine) error {
 	var wg sync.WaitGroup
 	apiGroup := engine.Group("/api")
 	{
-		apiGroup.POST("/callback", func(ctx *gin.Context) {
-			events, err := op.ParseRequest(ctx.Request)
+		apiGroup.POST("/callback", func(c *gin.Context) {
+			events, err := op.ParseRequest(c.Request)
 			if err != nil {
 				if err == linebot.ErrInvalidSignature {
 					log.Print(err)
 				}
-				ctx.String(http.StatusBadRequest, "NG")
+				c.String(http.StatusBadRequest, "NG")
 				return
 			}
 			for _, event := range events {
@@ -34,14 +35,14 @@ func (op *Operation) NewRouter(engine *gin.Engine) error {
 				wg.Add(1)
 				go func(ev *linebot.Event) {
 					defer wg.Done()
-					err = op.Switcher(ev)
+					err = op.Switcher(ctx, ev)
 					if err != nil {
 						log.Println(err)
 					}
 				}(event)
 			}
 			wg.Wait()
-			ctx.String(http.StatusOK, "OK")
+			c.String(http.StatusOK, "OK")
 		})
 	}
 

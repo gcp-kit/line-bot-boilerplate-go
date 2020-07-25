@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"reflect"
@@ -10,7 +11,7 @@ import (
 )
 
 // Switcher - separate processing for each event
-func (op *Operation) Switcher(event *linebot.Event) (err error) {
+func (op *Operation) Switcher(ctx context.Context, event *linebot.Event) (err error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			log.Println(rec)
@@ -49,7 +50,7 @@ func (op *Operation) Switcher(event *linebot.Event) (err error) {
 		return
 	}
 
-	resp := fn(op, event)
+	resp := fn(ctx, op, event)
 	if resp.Error != nil {
 		err = resp.Error
 	} else if len(resp.Stack) > 0 {

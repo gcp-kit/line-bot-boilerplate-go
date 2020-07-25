@@ -13,14 +13,8 @@ import (
 
 // Tracer - hold processing function for each event
 type Tracer struct {
-	Ctx      context.Context
-	Function map[TracerName]func(op *Operation, event *linebot.Event) *TracerResp
+	Function map[TracerName]func(ctx context.Context, op *Operation, event *linebot.Event) *TracerResp
 	LiffFunc map[string]func(ctx *gin.Context)
-}
-
-// NewTracer - constructor
-func NewTracer(ctx context.Context) *Tracer {
-	return &Tracer{Ctx: ctx}
 }
 
 // TracerResp - hold items for outgoing messages
@@ -30,7 +24,7 @@ type TracerResp struct {
 }
 
 // Execute - create and run instance
-func (tracer *Tracer) Execute(engine *gin.Engine) error {
+func (tracer *Tracer) Execute(ctx context.Context, engine *gin.Engine) error {
 	secret, ok := os.LookupEnv(EnvKeyChannelSecret)
 	if !ok {
 		log.Fatalf("no set env [%s]", EnvKeyChannelSecret)
@@ -48,7 +42,7 @@ func (tracer *Tracer) Execute(engine *gin.Engine) error {
 
 	op := &Operation{Client: client, Tracer: tracer}
 
-	if err := op.NewRouter(engine); err != nil {
+	if err := op.NewRouter(ctx, engine); err != nil {
 		return err
 	}
 
