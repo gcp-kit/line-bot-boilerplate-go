@@ -1,4 +1,2 @@
-.idea/
-vendor/
-.env.yaml
 .DS_Store
+.idea/
