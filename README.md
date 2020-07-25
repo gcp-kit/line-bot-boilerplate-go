@@ -14,27 +14,28 @@ boilerplateは多くあるが、ローカル開発とクラウド運用が共存
 * 外部依存モジュールはgo.modから取得  
 
 ## Installation
-
 ```shell script
-git clone https://github.com/gcp-kit/line-bot-boilerplate-go.git
-cd line-bot-boilerplate-go
-go get -u
-go mod tidy
+go get github.com/gcp-kit/line-bot-boilerplate-go
 ```
 
 ## Usage
+```shell script
+git clone https://github.com/gcp-kit/line-bot-boilerplate-go-example.git
+cd line-bot-boilerplate-go-example
+go get -u
+```
 
-`.env.yaml.tpl`にある値を整え`.tpl`を外す  
+`.env.yaml.tpl` を `.env.yaml` にしてyaml内の値を整える  
 
 ### Local
 
 ```shell script
-cd examples
 go run main.go
 ```
 
 ### GCP(Cloud Functions)
 ```shell script
+cd functions
 gcloud builds submit --config=cloudbuild.yaml .
 ```
 
