@@ -41,9 +41,9 @@ func WebHook(ctx *gin.Context, secret string, topic *pubsub.Topic) {
 }
 
 // ParentFunctions - CloudFunctions(Trigger: Pub/Sub)
-func ParentFunctions(ctx context.Context, message *pubsub.Message, tracer *Tracer, topic *pubsub.Topic) error {
+func ParentFunctions(ctx context.Context, message *pubsub.Message, topic *pubsub.Topic) error {
 	var wg sync.WaitGroup
-	events := tracer.ParseEvents(message)
+	events := util.ParseEvents(message)
 	for _, event := range events {
 		// nolint
 		wg.Add(1)

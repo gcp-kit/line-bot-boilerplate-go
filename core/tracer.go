@@ -2,11 +2,9 @@ package core
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"os"
 
-	"cloud.google.com/go/pubsub"
 	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -50,15 +48,4 @@ func (tracer *Tracer) Execute(ctx context.Context, engine *gin.Engine) error {
 		return err
 	}
 	return nil
-}
-
-// ParseEvents - extract `[]*linebot.Event`
-func (tracer *Tracer) ParseEvents(m *pubsub.Message) []*linebot.Event {
-	request := &struct {
-		Events []*linebot.Event `json:"events"`
-	}{}
-	if err := json.Unmarshal(m.Data, request); err != nil {
-		log.Fatal(err)
-	}
-	return request.Events
 }
