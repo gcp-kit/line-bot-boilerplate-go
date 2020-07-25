@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/gcp-kit/line-bot-boilerplate-go/constant"
 	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -24,7 +23,7 @@ func (op *Operation) Switcher(event *linebot.Event) (err error) {
 		}
 	}()
 
-	var eventType constant.TracerName
+	var eventType TracerName
 	switch event.Type {
 	case linebot.EventTypeMessage:
 		switch message := event.Message.(type) {

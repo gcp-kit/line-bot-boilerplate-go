@@ -1,4 +1,4 @@
-package constant
+package cmd
 
 // environment variable key
 const (

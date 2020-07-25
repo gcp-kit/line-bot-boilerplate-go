@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"cloud.google.com/go/pubsub"
-	"github.com/gcp-kit/line-bot-boilerplate-go/constant"
 	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -15,7 +14,7 @@ import (
 // Tracer - hold processing function for each event
 type Tracer struct {
 	Ctx      context.Context
-	Function map[constant.TracerName]func(op *Operation, event *linebot.Event) *TracerResp
+	Function map[TracerName]func(op *Operation, event *linebot.Event) *TracerResp
 	LiffFunc map[string]func(ctx *gin.Context)
 }
 
@@ -32,14 +31,14 @@ type TracerResp struct {
 
 // Execute - create and run instance
 func (tracer *Tracer) Execute(engine *gin.Engine) error {
-	secret, ok := os.LookupEnv(constant.EnvKeyChannelSecret)
+	secret, ok := os.LookupEnv(EnvKeyChannelSecret)
 	if !ok {
-		log.Fatalf("no set env [%s]", constant.EnvKeyChannelSecret)
+		log.Fatalf("no set env [%s]", EnvKeyChannelSecret)
 	}
 
-	token, ok := os.LookupEnv(constant.EnvKeyChannelAccessToken)
+	token, ok := os.LookupEnv(EnvKeyChannelAccessToken)
 	if !ok {
-		log.Fatalf("no set env [%s]", constant.EnvKeyChannelAccessToken)
+		log.Fatalf("no set env [%s]", EnvKeyChannelAccessToken)
 	}
 
 	client, err := linebot.New(secret, token)
