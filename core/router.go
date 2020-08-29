@@ -12,6 +12,7 @@ import (
 
 // Operation - structure to be managed collectively
 type Operation struct {
+	ErrMessage []linebot.SendingMessage
 	*Tracer
 	*linebot.Client
 }

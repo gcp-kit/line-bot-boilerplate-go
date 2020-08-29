@@ -71,6 +71,11 @@ func ChildFunctions(ctx context.Context, message *pubsub.Message, op *Operation)
 	}
 
 	if err := op.Switcher(ctx, event); err != nil {
+		if len(op.ErrMessage) > 0 {
+			if er := op.SendReplyMessage(event.ReplyToken, op.ErrMessage); er != nil {
+				log.Println(er)
+			}
+		}
 		return err
 	}
 	return nil
