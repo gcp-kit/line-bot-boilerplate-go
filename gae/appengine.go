@@ -32,6 +32,11 @@ func NewProps(client *cloudtasks.Client) *Props {
 	}
 }
 
+// SetTQClient - setter
+func (p *Props) SetTQClient(client *cloudtasks.Client) {
+	p.client = client
+}
+
 // SetSecret - setter
 func (p *Props) SetSecret(secret string) {
 	p.secret = secret
