@@ -114,7 +114,7 @@ func (p *Props) ParentFunctions(ctx context.Context, body []byte) error {
 
 // ChildFunctions ...
 func (p *Props) ChildFunctions(ctx context.Context, op *core.Operation, body []byte) error {
-	var event *linebot.Event
+	event := new(linebot.Event)
 	if err := event.UnmarshalJSON(body); err != nil {
 		return err
 	}
