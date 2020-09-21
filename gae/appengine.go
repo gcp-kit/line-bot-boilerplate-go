@@ -49,6 +49,7 @@ func (p *Props) createTask(ctx context.Context, data []byte) error {
 		Task: &tasks.Task{
 			MessageType: &tasks.Task_AppEngineHttpRequest{
 				AppEngineHttpRequest: &tasks.AppEngineHttpRequest{
+					Body:        data,
 					HttpMethod:  tasks.HttpMethod_POST,
 					RelativeUri: p.RelativeURI,
 				},
@@ -57,10 +58,12 @@ func (p *Props) createTask(ctx context.Context, data []byte) error {
 	}
 
 	if len(p.Service) > 0 {
-		req.Task.GetAppEngineHttpRequest().AppEngineRouting.Service = p.Service
+		gaeReq := req.Task.GetAppEngineHttpRequest()
+		if gaeReq.AppEngineRouting == nil {
+			gaeReq.AppEngineRouting = new(tasks.AppEngineRouting)
+		}
+		gaeReq.AppEngineRouting.Service = p.Service
 	}
-
-	req.Task.GetAppEngineHttpRequest().Body = data
 
 	if _, err := p.client.CreateTask(ctx, req); err != nil {
 		return xerrors.Errorf("failed to create tasks: %w", err)
