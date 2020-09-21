@@ -20,6 +20,7 @@ import (
 type Props struct {
 	QueuePath   string
 	RelativeURI string
+	Service     string
 
 	client *cloudtasks.Client
 	secret string
@@ -53,6 +54,10 @@ func (p *Props) createTask(ctx context.Context, data []byte) error {
 				},
 			},
 		},
+	}
+
+	if len(p.Service) > 0 {
+		req.Task.GetAppEngineHttpRequest().AppEngineRouting.Service = p.Service
 	}
 
 	req.Task.GetAppEngineHttpRequest().Body = data
